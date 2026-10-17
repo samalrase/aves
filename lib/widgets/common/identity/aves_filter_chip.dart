@@ -68,6 +68,8 @@ class const AvesFilterChip({
   static const double iconSize = 18;
   static const double fontSize = 14;
   static const double decoratedContentVerticalPadding = 5;
+  // decorated tiles (albums, countries, tags...) are drawn at this fraction of their cell width
+  static const double decoratedTileScale = .9;
 
   static double computeMaxWidthForRow(
     BuildContext context, {
@@ -204,6 +206,9 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
       setState(() {});
     }
   }
+
+  // when the stack is sized by its non-positioned child, overlays must not enlarge it
+  Widget _fillIf(bool fill, Widget child) => fill ? Positioned.fill(child: child) : child;
 
   @override
   Widget build(BuildContext context) {
@@ -367,13 +372,16 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
           // image with its own outline and rounded corners on top, title and details below it (not outlined),
           // so that the info height is measured rather than estimated
           final split = decoration != null && infoContent != null && constraints.hasBoundedHeight;
-          return Stack(
+          final stack = Stack(
             fit: StackFit.passthrough,
             children: [
               if (split)
                 Column(
+                  mainAxisSize: .min,
                   children: [
-                    Expanded(
+                    // square image, so that all tiles share the same width and height
+                    AspectRatio(
+                      aspectRatio: 1,
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
@@ -398,7 +406,9 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
                     child: decoration.widget,
                   ),
                 ),
-              Material(
+              _fillIf(
+                split,
+                Material(
                 color: decoration != null ? Colors.transparent : chipBackground,
                 shape: RoundedRectangleBorder(
                   borderRadius: borderRadius,
@@ -422,8 +432,11 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
                         ),
                 ),
               ),
+              ),
           if (banner != null)
-            LayoutBuilder(
+            _fillIf(
+              split,
+              LayoutBuilder(
               builder: (context, constraints) {
                 final scale = (constraints.maxHeight / 90 - .4).clamp(.45, 1.0);
                 return ClipRRect(
@@ -443,8 +456,18 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
                   ),
                 );
               },
+              ),
             ),
             ],
+          );
+          if (!split || !constraints.hasBoundedWidth || !constraints.maxWidth.isFinite) return stack;
+          // the whole tile is 10% smaller, centered horizontally
+          return Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: constraints.maxWidth * AvesFilterChip.decoratedTileScale,
+              child: stack,
+            ),
           );
         },
       ),

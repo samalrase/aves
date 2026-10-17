@@ -32,7 +32,7 @@ class AStyles {
   static TextStyle sectionTitleStyle(KnownLocale? locale) {
     // Apple Photos-like: no small caps / letter spacing, regular weight
     return const TextStyle(
-      fontSize: 20,
+      fontSize: 17,
       fontWeight: FontWeight.normal,
       letterSpacing: 0,
     );

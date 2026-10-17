@@ -122,7 +122,7 @@ class const AvesAppBar({
                               : const SizedBox(width: 16),
                           Expanded(
                             child: DefaultTextStyle(
-                              style: theme.appBarTheme.titleTextStyle!,
+                              style: _titleStyle(context, theme),
                               child: _title,
                             ),
                           ),
@@ -137,6 +137,18 @@ class const AvesAppBar({
           ),
         ),
       ),
+    );
+  }
+
+  // `DefaultTextStyle` replaces the inherited style instead of merging with it,
+  // so the app font must be carried over explicitly or the title falls back to the system font
+  static TextStyle _titleStyle(BuildContext context, ThemeData theme) {
+    final titleStyle = theme.appBarTheme.titleTextStyle ?? const TextStyle();
+    final baseStyle = theme.textTheme.bodyMedium ?? DefaultTextStyle.of(context).style;
+    return titleStyle.copyWith(
+      fontFamily: titleStyle.fontFamily ?? baseStyle.fontFamily,
+      fontFamilyFallback: titleStyle.fontFamilyFallback ?? baseStyle.fontFamilyFallback,
+      package: titleStyle.package ?? baseStyle.package,
     );
   }
 
