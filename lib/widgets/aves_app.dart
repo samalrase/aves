@@ -725,9 +725,9 @@ class _AvesAppContentDecoratorState extends State<AvesAppContentDecorator> with 
         builder: (context, snapshot) {
           // Flutter v3.4 already checks the system `Configuration.fontWeightAdjustment` to update `MediaQuery`
           // but we need to also check the non-standard Samsung field `bf` representing the bold font toggle
-          final shouldUseBoldFont = snapshot.data ?? false;
           final mq = MediaQuery.of(context).copyWith(
-            boldText: shouldUseBoldFont,
+            // bold text is disabled app-wide
+            boldText: false,
           );
           return ValueListenableBuilder<TvMediaQueryModifier?>(
             valueListenable: _tvMediaQueryModifierNotifier,

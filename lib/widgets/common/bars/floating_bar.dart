@@ -13,6 +13,7 @@ class const AvesFloatingBar({
   required final EdgeInsets margin,
   required final Widget Function(BuildContext context, Color backgroundColor, Widget? child) builder,
   final Widget? child,
+  final bool showBorder = true,
 }) extends StatefulWidget {
   static const borderRadius = BorderRadius.all(Radius.circular(100));
 
@@ -72,12 +73,14 @@ class _AvesFloatingBarState extends State<AvesFloatingBar> with RouteAware {
       builder: (context, isBlurAllowed, child) {
         final blurred = isBlurAllowed && context.select<Settings, bool>((v) => v.enableBlurEffect);
         return Container(
-          foregroundDecoration: BoxDecoration(
-            border: Border.all(
-              color: theme.dividerColor,
-            ),
-            borderRadius: AvesFloatingBar.borderRadius,
-          ),
+          foregroundDecoration: widget.showBorder
+              ? BoxDecoration(
+                  border: Border.all(
+                    color: theme.dividerColor,
+                  ),
+                  borderRadius: AvesFloatingBar.borderRadius,
+                )
+              : null,
           margin: widget.margin,
           child: BlurredRRect(
             enabled: blurred,

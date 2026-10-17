@@ -244,7 +244,7 @@ class _PackageLicensePageState extends State<_PackageLicensePage> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: Text(
                   paragraph.text,
-                  style: const TextStyle(fontWeight: .bold),
+                  style: const TextStyle(fontWeight: .normal),
                   textAlign: .center,
                 ),
               ),

@@ -149,6 +149,11 @@ class CoveredFilterChip<T extends CollectionFilter> extends StatelessWidget {
       allowGenericIcon: false,
       decoration: AvesFilterDecoration(
         radius: radius(extent),
+        infoHeight: infoHeight(
+          extent: extent,
+          textScaler: textScaler,
+          showText: showText,
+        ),
         widget: Padding(
           padding: EdgeInsets.only(
             bottom: infoHeight(

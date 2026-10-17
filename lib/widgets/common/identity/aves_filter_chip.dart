@@ -32,6 +32,8 @@ enum HeroType { always, onTap, never }
 class const AvesFilterDecoration({
   required final Radius radius,
   required final Widget widget,
+  // height of the info area (title + details) below the image, excluded from the outline
+  final double infoHeight = 0,
 }) {
   BorderRadius get textBorderRadius => BorderRadius.vertical(bottom: radius);
 
@@ -60,6 +62,7 @@ class const AvesFilterChip({
   static const double defaultPadding = 6.0;
   static const double defaultRadius = 32;
   static const double outlineWidth = 2;
+  static const double decoratedOutlineWidth = 1;
   static const double minChipHeight = kMinInteractiveDimension;
   static const double minChipWidth = kMinInteractiveDimension;
   static const double iconSize = 18;
@@ -353,14 +356,36 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
                   if (snapshot.hasData) {
                     _outlineColor = snapshot.data!;
                   }
+                  final outlineColor = widget.useFilterColor ? _outlineColor : context.select<AvesColorsData, Color>((v) => v.neutral);
+                  final outlineBorder = Border.fromBorderSide(
+                    BorderSide(
+                      color: outlineColor,
+                      width: decoration != null ? AvesFilterChip.decoratedOutlineWidth : AvesFilterChip.outlineWidth,
+                    ),
+                  );
+                  if (decoration != null && content != null) {
+                    // outline only the image area, not the title and details below it
+                    return Stack(
+                      fit: StackFit.passthrough,
+                      children: [
+                        content,
+                        Positioned.fill(
+                          bottom: decoration.infoHeight,
+                          child: IgnorePointer(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                border: outlineBorder,
+                                borderRadius: borderRadius,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
                   return DecoratedBox(
                     decoration: BoxDecoration(
-                      border: Border.fromBorderSide(
-                        BorderSide(
-                          color: widget.useFilterColor ? _outlineColor : context.select<AvesColorsData, Color>((v) => v.neutral),
-                          width: AvesFilterChip.outlineWidth,
-                        ),
-                      ),
+                      border: outlineBorder,
                       borderRadius: borderRadius,
                     ),
                     position: DecorationPosition.foreground,

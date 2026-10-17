@@ -88,6 +88,7 @@ class const AvesAppBar({
             value: AvesApp.themeSystemOverlayStyle(theme),
             child: AvesFloatingBar(
               margin: margin,
+              showBorder: false,
               builder: (context, backgroundColor, child) => Material(
                 color: backgroundColor,
                 child: AInkResponse(

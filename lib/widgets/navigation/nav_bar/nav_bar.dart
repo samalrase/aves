@@ -20,12 +20,17 @@ class const AppBottomNavBar({
   // collection loaded in the `CollectionPage`, if any
   final CollectionLens? currentCollection,
 }) extends StatefulWidget {
+  // taller than the default to make room for the labels below the icons
+  static const double barHeight = 64;
+  static const double labelFontSize = 11.5;
+
   static EdgeInsets getMargin(double safeBottomPadding) {
-    return EdgeInsets.only(left: 8, top: 8, right: 8, bottom: max(8, safeBottomPadding + 4));
+    // keep the bar close to the bottom edge of the screen
+    return EdgeInsets.only(left: 8, top: 8, right: 8, bottom: max(4, safeBottomPadding - 10));
   }
 
   static double getHeightWithMargin(double safeBottomPadding) {
-    return kBottomNavigationBarHeight + getMargin(safeBottomPadding).vertical;
+    return barHeight + getMargin(safeBottomPadding).vertical;
   }
 
   @override
@@ -68,20 +73,23 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
     if (items.length < 2) return const SizedBox();
 
     final safeBottomPadding = context.select<MediaQueryData, double>((mq) => mq.safeBottomPadding);
-    Widget child = FloatingNavBar(
-      scrollController: PrimaryScrollController.of(context),
-      events: widget.events,
-      childHeight: AppBottomNavBar.getHeightWithMargin(safeBottomPadding),
-      child: SafeArea(
-        bottom: false,
-        child: MediaQuery.removePadding(
-          context: context,
-          // `bottom` is computed beforehand and used in multiple places,
-          // so we remove it from context to prevent additional padding
-          removeBottom: true,
-          child: AvesFloatingBar(
-            margin: AppBottomNavBar.getMargin(safeBottomPadding),
-            builder: (context, backgroundColor, child) => BottomNavigationBar(
+    final margin = AppBottomNavBar.getMargin(safeBottomPadding);
+    final totalHeight = AppBottomNavBar.getHeightWithMargin(safeBottomPadding);
+    final barBottomStop = ((margin.top + AppBottomNavBar.barHeight) / totalHeight).clamp(0.0, 1.0);
+    final barMiddleStop = ((margin.top + AppBottomNavBar.barHeight / 2) / totalHeight).clamp(0.0, 1.0);
+
+    final bar = SafeArea(
+      bottom: false,
+      child: MediaQuery.removePadding(
+        context: context,
+        // `bottom` is computed beforehand and used in multiple places,
+        // so we remove it from context to prevent additional padding
+        removeBottom: true,
+        child: AvesFloatingBar(
+          margin: margin,
+          builder: (context, backgroundColor, child) => SizedBox(
+            height: AppBottomNavBar.barHeight,
+            child: BottomNavigationBar(
               items: items.map((item) {
                 final label = item.getText(context);
                 return BottomNavigationBarItem(
@@ -94,11 +102,45 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               currentIndex: _getCurrentIndex(context, items),
               type: BottomNavigationBarType.fixed,
               backgroundColor: backgroundColor,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedFontSize: AppBottomNavBar.labelFontSize,
+              unselectedFontSize: AppBottomNavBar.labelFontSize,
+              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, letterSpacing: .2),
+              unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, letterSpacing: .2),
             ),
           ),
         ),
+      ),
+    );
+
+    Widget child = FloatingNavBar(
+      scrollController: PrimaryScrollController.of(context),
+      events: widget.events,
+      childHeight: totalHeight,
+      child: Stack(
+        children: [
+          // black shadow fading in below the bar, so that nothing of the page is visible beneath it
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0),
+                      Colors.black.withValues(alpha: .6),
+                      Colors.black,
+                    ],
+                    stops: [0, barMiddleStop, barBottomStop],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          bar,
+        ],
       ),
     );
 

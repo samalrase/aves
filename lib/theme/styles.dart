@@ -24,16 +24,16 @@ class AStyles {
   static TextStyle pageTitleTextStyle(KnownLocale locale) {
     return const TextStyle(
       fontSize: 20,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.normal,
       letterSpacing: 0,
     );
   }
 
   static TextStyle sectionTitleStyle(KnownLocale? locale) {
-    // Apple Photos-like: bold, no small caps / letter spacing
+    // Apple Photos-like: no small caps / letter spacing, regular weight
     return const TextStyle(
       fontSize: 20,
-      fontWeight: FontWeight.w700,
+      fontWeight: FontWeight.normal,
       letterSpacing: 0,
     );
   }
