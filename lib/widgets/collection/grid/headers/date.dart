@@ -17,10 +17,14 @@ class const DaySectionHeader<T>({
     if (date == null) return l10n.sectionUnknown;
 
     final locale = settings.avesLocale;
-    final calOps = locale.calendar.ops;
 
-    if (calOps.isToday(date)) return l10n.dateToday;
-    if (calOps.isYesterday(date)) return l10n.dateYesterday;
+    try {
+      final calOps = locale.calendar.ops;
+      if (calOps.isToday(date)) return l10n.dateToday;
+      if (calOps.isYesterday(date)) return l10n.dateYesterday;
+    } catch (_) {
+      // fall through to the plain date, a header must never break the page
+    }
 
     // format: `weekday, day month year` (e.g. `سه شنبه، ۲۱ مهر ۱۴۰۵`)
     return formatDay(date, locale);
@@ -47,12 +51,18 @@ class const MonthSectionHeader<T>({
     if (date == null) return l10n.sectionUnknown;
 
     final locale = settings.avesLocale;
-    final calOps = locale.calendar.ops;
 
-    if (calOps.isThisMonth(date)) return l10n.dateThisMonth;
+    bool isThisYear = false;
+    try {
+      final calOps = locale.calendar.ops;
+      if (calOps.isThisMonth(date)) return l10n.dateThisMonth;
+      isThisYear = calOps.isThisYear(date);
+    } catch (_) {
+      // fall through to the plain month
+    }
 
-    final formatter = calOps.isThisYear(date) ? locale.MMMM : locale.yMMMM;
-    final localized = formatter(date);
+    final localized = isThisYear ? formatMonth(date, locale) : formatMonthYear(date, locale);
+    if (localized.isEmpty) return localized;
     return '${localized.substring(0, 1).toUpperCase()}${localized.substring(1)}';
   }
 

@@ -89,6 +89,7 @@ class const AvesAppBar({
             child: AvesFloatingBar(
               margin: margin,
               showBorder: false,
+              cornerRadius: BorderRadius.zero,
               builder: (context, backgroundColor, child) => Material(
                 color: backgroundColor,
                 child: AInkResponse(
