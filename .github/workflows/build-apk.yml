@@ -17,7 +17,7 @@ jobs:
       - name: Apply libre flavor dependencies
         run: bash scripts/apply_flavor_libre.sh
       - name: Build APK
-        run: ./flutterw build apk --release --flavor libre --split-per-abi
+        run: ./flutterw build apk -t lib/main_libre.dart --release --flavor libre --split-per-abi
       - uses: actions/upload-artifact@v4
         with:
           name: aves-apk
