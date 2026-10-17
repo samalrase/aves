@@ -2,26 +2,44 @@ import 'package:aves/locale/aves_locale.dart';
 import 'package:aves/theme/text.dart';
 import 'package:intl/intl.dart';
 
+String _two(int v) => v.toString().padLeft(2, '0');
+
 // format: `weekday, day month year` (e.g. `سه شنبه، ۲۱ مهر ۱۴۰۵`)
+// each part is computed independently and none of them can throw,
+// so a formatting failure can never break the page that displays a date
 String formatDay(DateTime date, AvesLocale locale) {
+  String weekday = '';
   try {
-    final lang = locale.languageBcp47;
-    final weekday = DateFormat.EEEE(lang).format(date);
-    final separator = lang.startsWith('fa') || lang.startsWith('ar') ? '، ' : ', ';
-    return '$weekday$separator${locale.yMMMMd(date)}';
+    weekday = DateFormat.EEEE(locale.languageBcp47).format(date);
   } catch (_) {
-    return DateFormat.yMMMMd().format(date);
+    // weekday is optional
   }
+
+  String day;
+  try {
+    day = locale.yMMMMd(date);
+  } catch (_) {
+    day = '${date.year}-${_two(date.month)}-${_two(date.day)}';
+  }
+
+  if (weekday.isEmpty) return day;
+  final lang = locale.languageBcp47;
+  final separator = lang.startsWith('fa') || lang.startsWith('ar') ? '، ' : ', ';
+  return '$weekday$separator$day';
 }
 
-// time does not depend on the calendar, so it is formatted with the regular (Gregorian) formatter
+// time does not depend on the calendar
 String formatTime(DateTime date, AvesLocale locale, bool use24hour) {
   try {
-    final lang = locale.languageBcp47;
-    final formatter = use24hour ? DateFormat.Hm(lang) : DateFormat.jm(lang);
-    return formatter.format(date);
+    return use24hour ? locale.Hm(date) : locale.jm(date);
   } catch (_) {
-    return DateFormat(use24hour ? 'HH:mm' : 'h:mm a').format(date);
+    // fall through to the plain formatter
+  }
+  try {
+    final lang = locale.languageBcp47;
+    return (use24hour ? DateFormat.Hm(lang) : DateFormat.jm(lang)).format(date);
+  } catch (_) {
+    return '${_two(date.hour)}:${_two(date.minute)}';
   }
 }
 

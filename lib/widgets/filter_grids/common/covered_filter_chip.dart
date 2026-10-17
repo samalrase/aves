@@ -154,15 +154,7 @@ class CoveredFilterChip<T extends CollectionFilter> extends StatelessWidget {
           textScaler: textScaler,
           showText: showText,
         ),
-        widget: Padding(
-          padding: EdgeInsets.only(
-            bottom: infoHeight(
-              extent: extent,
-              textScaler: textScaler,
-              showText: showText,
-            ),
-          ),
-          child: entry == null
+        widget: entry == null
               ? StreamBuilder<Set<CollectionFilter>?>(
                   stream: covers.colorChangeStream.where((event) => event == null || event.contains(_filter)),
                   builder: (context, _) {
@@ -189,7 +181,6 @@ class CoveredFilterChip<T extends CollectionFilter> extends StatelessWidget {
                   extent: thumbnailExtent,
                   devicePixelRatio: MediaQuery.devicePixelRatioOf(context),
                 ),
-        ),
       ),
       banner: banner,
       details: showText ? _buildDetails(context, source, _filter) : null,

@@ -1,9 +1,9 @@
 import 'package:aves/locale/calendar/calendar_utils.dart';
 import 'package:aves/model/settings/settings.dart';
 import 'package:aves/model/source/section_keys.dart';
+import 'package:aves/theme/format.dart';
 import 'package:aves/widgets/common/extensions/build_context.dart';
 import 'package:aves/widgets/common/grid/header.dart';
-import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
 class const DaySectionHeader<T>({
@@ -23,9 +23,7 @@ class const DaySectionHeader<T>({
     if (calOps.isYesterday(date)) return l10n.dateYesterday;
 
     // format: `weekday, day month year` (e.g. `سه شنبه، ۲۱ مهر ۱۴۰۵`)
-    final weekday = DateFormat.EEEE(locale.languageBcp47).format(date);
-    final separator = locale.languageBcp47.startsWith('fa') || locale.languageBcp47.startsWith('ar') ? '، ' : ', ';
-    return '$weekday$separator${locale.yMMMMd(date)}';
+    return formatDay(date, locale);
   }
 
   @override

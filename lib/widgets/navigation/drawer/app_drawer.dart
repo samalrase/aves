@@ -14,7 +14,6 @@ import 'package:aves/theme/icons.dart';
 import 'package:aves/theme/styles.dart';
 import 'package:aves/utils/android_file_utils.dart';
 import 'package:aves/utils/file_utils.dart';
-import 'package:aves/widgets/about/about_page.dart';
 import 'package:aves/widgets/collection/collection_page.dart';
 import 'package:aves/widgets/common/basic/text/outlined.dart';
 import 'package:aves/widgets/common/extensions/build_context.dart';
@@ -177,15 +176,15 @@ class _AppDrawerState extends State<AppDrawer> with WidgetsBindingObserver {
       );
     }
 
-    final colorScheme = Theme.of(context).colorScheme;
-    final onPrimary = colorScheme.onPrimary;
+    // fully black header, with light foreground
+    const onPrimary = Colors.white;
 
     final drawerButtonStyle = ButtonStyle(
       padding: WidgetStateProperty.all(const EdgeInsetsDirectional.only(start: 12, end: 16)),
     );
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: colorScheme.primary,
+      color: Colors.black,
       child: SafeArea(
         bottom: false,
         child: OutlinedButtonTheme(
@@ -227,14 +226,6 @@ class _AppDrawerState extends State<AppDrawer> with WidgetsBindingObserver {
               Wrap(
                 spacing: 8,
                 children: [
-                  OutlinedButton.icon(
-                    // key is expected by test driver
-                    key: const Key('drawer-about-button'),
-                    onPressed: () => goTo(AboutPage.routeName, (_) => const AboutPage()),
-                    style: drawerButtonStyle,
-                    icon: const Icon(AIcons.info),
-                    label: Text(l10n.drawerAboutButton),
-                  ),
                   OutlinedButton.icon(
                     // key is expected by test driver
                     key: const Key('drawer-settings-button'),

@@ -231,6 +231,8 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
         : null;
 
     Widget? content;
+    // title and details, when displayed below the image of a decorated chip
+    Widget? infoContent;
     final showLeading = widget.showLeading;
     final showText = widget.showText;
     if (showLeading || showText) {
@@ -291,6 +293,10 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
       }
 
       if (decoration != null) {
+        infoContent = Padding(
+          padding: EdgeInsets.symmetric(horizontal: padding * 2, vertical: AvesFilterChip.decoratedContentVerticalPadding),
+          child: content,
+        );
         content = Align(
           alignment: .bottomCenter,
           child: ClipRRect(
@@ -312,6 +318,35 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
 
     final borderRadius = decoration?.chipBorderRadius ?? const BorderRadius.all(Radius.circular(AvesFilterChip.defaultRadius));
     final banner = widget.banner;
+
+    Widget buildOutline({
+      required double width,
+      Widget? child,
+      DecorationPosition position = DecorationPosition.background,
+    }) {
+      return FutureBuilder<Color>(
+        future: filter.color(context),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            _outlineColor = snapshot.data!;
+          }
+          return DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.fromBorderSide(
+                BorderSide(
+                  color: widget.useFilterColor ? _outlineColor : context.select<AvesColorsData, Color>((v) => v.neutral),
+                  width: width,
+                ),
+              ),
+              borderRadius: borderRadius,
+            ),
+            position: position,
+            child: child,
+          );
+        },
+      );
+    }
+
     Widget chip = Container(
       constraints: BoxConstraints(
         minWidth: AvesFilterChip.minChipWidth,
@@ -327,74 +362,66 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
         ),
         minHeight: AvesFilterChip.minChipHeight,
       ),
-      child: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          if (decoration != null)
-            ClipRRect(
-              borderRadius: decoration.chipBorderRadius,
-              child: decoration.widget,
-            ),
-          Material(
-            color: decoration != null ? Colors.transparent : chipBackground,
-            shape: RoundedRectangleBorder(
-              borderRadius: borderRadius,
-            ),
-            child: AInkResponse(
-              // as of Flutter v2.8.0, `InkWell` does not have `onLongPressStart` like `GestureDetector`,
-              // so we get the long press details from the tap instead
-              onTapDown: onLongPress != null ? (details) => _tapPosition = details.globalPosition : null,
-              onTap: onTap,
-              onLongPress: onLongPress,
-              containedInkWell: true,
-              highlightShape: BoxShape.rectangle,
-              borderRadius: borderRadius,
-              longPressTimeout: settings.longPressTimeout,
-              child: FutureBuilder<Color>(
-                future: filter.color(context),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    _outlineColor = snapshot.data!;
-                  }
-                  final outlineColor = widget.useFilterColor ? _outlineColor : context.select<AvesColorsData, Color>((v) => v.neutral);
-                  final outlineBorder = Border.fromBorderSide(
-                    BorderSide(
-                      color: outlineColor,
-                      width: decoration != null ? AvesFilterChip.decoratedOutlineWidth : AvesFilterChip.outlineWidth,
-                    ),
-                  );
-                  if (decoration != null && content != null) {
-                    // outline only the image area, not the title and details below it
-                    return Stack(
-                      fit: StackFit.passthrough,
-                      children: [
-                        content,
-                        Positioned.fill(
-                          bottom: decoration.infoHeight,
-                          child: IgnorePointer(
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                border: outlineBorder,
-                                borderRadius: borderRadius,
-                              ),
-                            ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // image with its own outline and rounded corners on top, title and details below it (not outlined),
+          // so that the info height is measured rather than estimated
+          final split = decoration != null && infoContent != null && constraints.hasBoundedHeight;
+          return Stack(
+            fit: StackFit.passthrough,
+            children: [
+              if (split)
+                Column(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          ClipRRect(
+                            borderRadius: decoration!.chipBorderRadius,
+                            child: decoration.widget,
                           ),
-                        ),
-                      ],
-                    );
-                  }
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      border: outlineBorder,
-                      borderRadius: borderRadius,
+                          IgnorePointer(
+                            child: buildOutline(width: AvesFilterChip.decoratedOutlineWidth),
+                          ),
+                        ],
+                      ),
                     ),
-                    position: DecorationPosition.foreground,
-                    child: content,
-                  );
-                },
+                    infoContent!,
+                  ],
+                )
+              else if (decoration != null)
+                ClipRRect(
+                  borderRadius: decoration.chipBorderRadius,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: decoration.infoHeight),
+                    child: decoration.widget,
+                  ),
+                ),
+              Material(
+                color: decoration != null ? Colors.transparent : chipBackground,
+                shape: RoundedRectangleBorder(
+                  borderRadius: borderRadius,
+                ),
+                child: AInkResponse(
+                  // as of Flutter v2.8.0, `InkWell` does not have `onLongPressStart` like `GestureDetector`,
+                  // so we get the long press details from the tap instead
+                  onTapDown: onLongPress != null ? (details) => _tapPosition = details.globalPosition : null,
+                  onTap: onTap,
+                  onLongPress: onLongPress,
+                  containedInkWell: true,
+                  highlightShape: BoxShape.rectangle,
+                  borderRadius: borderRadius,
+                  longPressTimeout: settings.longPressTimeout,
+                  child: split
+                      ? const SizedBox.expand()
+                      : buildOutline(
+                          width: decoration != null ? AvesFilterChip.decoratedOutlineWidth : AvesFilterChip.outlineWidth,
+                          position: DecorationPosition.foreground,
+                          child: content,
+                        ),
+                ),
               ),
-            ),
-          ),
           if (banner != null)
             LayoutBuilder(
               builder: (context, constraints) {
@@ -417,7 +444,9 @@ class _AvesFilterChipState extends State<AvesFilterChip> {
                 );
               },
             ),
-        ],
+            ],
+          );
+        },
       ),
     );
 
