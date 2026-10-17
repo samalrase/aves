@@ -16,7 +16,15 @@ jobs:
           sed -i -E 's#("appName"[[:space:]]*:[[:space:]]*)"[^"]*"#\1"Gallery"#' lib/l10n/app_*.arb
       - name: Apply libre flavor dependencies
         run: bash scripts/apply_flavor_libre.sh
+      - name: Create signing key
+        run: |
+          keytool -genkeypair -keystore "$RUNNER_TEMP/gallery.jks" -alias gallery -keyalg RSA -keysize 2048 -validity 10000 -storepass galleryPass123 -keypass galleryPass123 -dname "CN=Gallery"
       - name: Build APK
+        env:
+          AVES_STORE_FILE: ${{ runner.temp }}/gallery.jks
+          AVES_STORE_PASSWORD: galleryPass123
+          AVES_KEY_ALIAS: gallery
+          AVES_KEY_PASSWORD: galleryPass123
         run: ./flutterw build apk -t lib/main_libre.dart --release --flavor libre --split-per-abi
       - uses: actions/upload-artifact@v4
         with:
