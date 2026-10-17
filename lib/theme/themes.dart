@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 class Themes {
-  static String asButtonLabel(String s) => s.toUpperCase();
+  static String asButtonLabel(String s) => s;
 
   static TextStyle searchFieldStyle(BuildContext context) => Theme.of(context).textTheme.bodyLarge!;
 
@@ -45,7 +45,45 @@ class Themes {
     return Color.alphaBlend(colors.surfaceTint, colors.onSurface).withValues(alpha: .5);
   }
 
-  static final _typography = Typography.material2021(platform: TargetPlatform.android);
+  // use the device system font (no bundled/forced font family)
+  static TextStyle _systemFont(TextStyle? s) => s == null
+      ? const TextStyle()
+      : TextStyle(
+          inherit: s.inherit,
+          color: s.color,
+          fontSize: s.fontSize,
+          fontWeight: s.fontWeight,
+          fontStyle: s.fontStyle,
+          letterSpacing: s.letterSpacing,
+          wordSpacing: s.wordSpacing,
+          height: s.height,
+          leadingDistribution: s.leadingDistribution,
+        );
+
+  static TextTheme _systemTextTheme(TextTheme t) => TextTheme(
+    displayLarge: _systemFont(t.displayLarge),
+    displayMedium: _systemFont(t.displayMedium),
+    displaySmall: _systemFont(t.displaySmall),
+    headlineLarge: _systemFont(t.headlineLarge),
+    headlineMedium: _systemFont(t.headlineMedium),
+    headlineSmall: _systemFont(t.headlineSmall),
+    titleLarge: _systemFont(t.titleLarge),
+    titleMedium: _systemFont(t.titleMedium),
+    titleSmall: _systemFont(t.titleSmall),
+    bodyLarge: _systemFont(t.bodyLarge),
+    bodyMedium: _systemFont(t.bodyMedium),
+    bodySmall: _systemFont(t.bodySmall),
+    labelLarge: _systemFont(t.labelLarge),
+    labelMedium: _systemFont(t.labelMedium),
+    labelSmall: _systemFont(t.labelSmall),
+  );
+
+  static final _baseTypography = Typography.material2021(platform: TargetPlatform.android);
+  static final _typography = Typography.material2021(
+    platform: TargetPlatform.android,
+    black: _systemTextTheme(_baseTypography.black),
+    white: _systemTextTheme(_baseTypography.white),
+  );
 
   static ThemeData _baseTheme(ColorScheme colors, bool deviceInitialized) {
     return ThemeData(
@@ -111,6 +149,7 @@ class Themes {
 
   static PopupMenuThemeData _popupMenuTheme(ColorScheme colors, TextTheme textTheme) {
     return PopupMenuThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       color: _schemeSecondLayer(colors),
       labelTextStyle: WidgetStateProperty.resolveWith((states) {
         // adapted from M3 defaults
@@ -203,6 +242,7 @@ class Themes {
         systemOverlayStyle: deviceInitialized ? AvesApp.systemUIStyleForBrightness(colors.brightness, _schemeFirstLayer(colors)) : const SystemUiOverlayStyle(),
       ),
       dialogTheme: DialogThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         backgroundColor: _schemeSecondLayer(colors),
         titleTextStyle: AStyles.pageTitleTextStyle(locale).copyWith(color: _lightTitleColor),
       ),
@@ -257,6 +297,7 @@ class Themes {
         systemOverlayStyle: deviceInitialized ? AvesApp.systemUIStyleForBrightness(colors.brightness, _schemeFirstLayer(colors)) : const SystemUiOverlayStyle(),
       ),
       dialogTheme: DialogThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         backgroundColor: _schemeSecondLayer(colors),
         titleTextStyle: AStyles.pageTitleTextStyle(locale).copyWith(color: _darkTitleColor),
       ),

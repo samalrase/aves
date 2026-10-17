@@ -22,15 +22,19 @@ class AStyles {
   }
 
   static TextStyle pageTitleTextStyle(KnownLocale locale) {
-    return _baseTitleStyle(locale).copyWith(
+    return const TextStyle(
       fontSize: 20,
-      fontWeight: .normal,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0,
     );
   }
 
   static TextStyle sectionTitleStyle(KnownLocale? locale) {
-    return _baseTitleStyle(locale).copyWith(
+    // Apple Photos-like: bold, no small caps / letter spacing
+    return const TextStyle(
       fontSize: 20,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 0,
     );
   }
 

@@ -22,9 +22,10 @@ class const DaySectionHeader<T>({
     if (calOps.isToday(date)) return l10n.dateToday;
     if (calOps.isYesterday(date)) return l10n.dateYesterday;
 
-    final weekday = DateFormat.E(locale.languageBcp47).format(date);
-    if (calOps.isThisYear(date)) return '${locale.MMMMd(date)} ($weekday)';
-    return '${locale.yMMMMd(date)} ($weekday)';
+    // format: `weekday, day month year` (e.g. `سه شنبه، ۲۱ مهر ۱۴۰۵`)
+    final weekday = DateFormat.EEEE(locale.languageBcp47).format(date);
+    final separator = locale.languageBcp47.startsWith('fa') || locale.languageBcp47.startsWith('ar') ? '، ' : ', ';
+    return '$weekday$separator${locale.yMMMMd(date)}';
   }
 
   @override
