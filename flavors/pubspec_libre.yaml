@@ -178,6 +178,19 @@ dev_dependencies:
   test:
 
 flutter:
+  fonts:
+    - family: Vazirmatn
+      fonts:
+        - asset: assets/fonts/Vazirmatn-FD-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Vazirmatn-FD-Light.ttf
+          weight: 400
+        - asset: assets/fonts/Vazirmatn-FD-Light.ttf
+          weight: 500
+        - asset: assets/fonts/Vazirmatn-FD-Light.ttf
+          weight: 600
+        - asset: assets/fonts/Vazirmatn-FD-Light.ttf
+          weight: 700
   assets:
     - assets/
   generate: true

@@ -14,7 +14,7 @@ class const AvesFloatingBar({
   required final Widget Function(BuildContext context, Color backgroundColor, Widget? child) builder,
   final Widget? child,
 }) extends StatefulWidget {
-  static const borderRadius = BorderRadius.all(Radius.circular(8));
+  static const borderRadius = BorderRadius.all(Radius.circular(100));
 
   @override
   State<AvesFloatingBar> createState() => _AvesFloatingBarState();

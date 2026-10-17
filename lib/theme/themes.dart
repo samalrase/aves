@@ -45,44 +45,13 @@ class Themes {
     return Color.alphaBlend(colors.surfaceTint, colors.onSurface).withValues(alpha: .5);
   }
 
-  // use the device system font (no bundled/forced font family)
-  static TextStyle _systemFont(TextStyle? s) => s == null
-      ? const TextStyle()
-      : TextStyle(
-          inherit: s.inherit,
-          color: s.color,
-          fontSize: s.fontSize,
-          fontWeight: s.fontWeight,
-          fontStyle: s.fontStyle,
-          letterSpacing: s.letterSpacing,
-          wordSpacing: s.wordSpacing,
-          height: s.height,
-          leadingDistribution: s.leadingDistribution,
-        );
-
-  static TextTheme _systemTextTheme(TextTheme t) => TextTheme(
-    displayLarge: _systemFont(t.displayLarge),
-    displayMedium: _systemFont(t.displayMedium),
-    displaySmall: _systemFont(t.displaySmall),
-    headlineLarge: _systemFont(t.headlineLarge),
-    headlineMedium: _systemFont(t.headlineMedium),
-    headlineSmall: _systemFont(t.headlineSmall),
-    titleLarge: _systemFont(t.titleLarge),
-    titleMedium: _systemFont(t.titleMedium),
-    titleSmall: _systemFont(t.titleSmall),
-    bodyLarge: _systemFont(t.bodyLarge),
-    bodyMedium: _systemFont(t.bodyMedium),
-    bodySmall: _systemFont(t.bodySmall),
-    labelLarge: _systemFont(t.labelLarge),
-    labelMedium: _systemFont(t.labelMedium),
-    labelSmall: _systemFont(t.labelSmall),
-  );
+  static const _fontFamily = 'Vazirmatn';
 
   static final _baseTypography = Typography.material2021(platform: TargetPlatform.android);
   static final _typography = Typography.material2021(
     platform: TargetPlatform.android,
-    black: _systemTextTheme(_baseTypography.black),
-    white: _systemTextTheme(_baseTypography.white),
+    black: _baseTypography.black.apply(fontFamily: _fontFamily),
+    white: _baseTypography.white.apply(fontFamily: _fontFamily),
   );
 
   static ThemeData _baseTheme(ColorScheme colors, bool deviceInitialized) {
