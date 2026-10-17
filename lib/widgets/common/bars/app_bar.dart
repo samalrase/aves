@@ -148,7 +148,6 @@ class const AvesAppBar({
     return titleStyle.copyWith(
       fontFamily: titleStyle.fontFamily ?? baseStyle.fontFamily,
       fontFamilyFallback: titleStyle.fontFamilyFallback ?? baseStyle.fontFamilyFallback,
-      package: titleStyle.package ?? baseStyle.package,
     );
   }
 
