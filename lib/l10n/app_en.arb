@@ -1,7 +1,7 @@
 {
   "appName": "گالری",
   "welcomeMessage": "خوش آمدید",
-  "welcomeOptional": "Optional",
+  "welcomeOptional": "اختیاری",
   "welcomeTermsToggle": "من تمامی شرایط را می پذیرم",
   "itemCount": "{count, plural, =1{{count} item} other{{count} items}}",
   "@itemCount": {
@@ -1001,8 +1001,8 @@
   "settingsSubtitleThemeTextAlignmentRight": "Right",
 
   "settingsPrivacySectionTitle": "Privacy",
-  "settingsAllowInstalledAppAccess": "Access to app inventory",
-  "settingsAllowInstalledAppAccessSubtitle": "Used to improve album display",
+  "settingsAllowInstalledAppAccess": "دسترسی اپ به فایلها",
+  "settingsAllowInstalledAppAccessSubtitle": "دسترسی اپ به همه فایلها و گالری",
   "settingsAllowErrorReporting": "Anonymous error reporting",
   "settingsAutoExportSettings": "Auto settings export",
   "settingsSaveSearchHistory": "Save search history",
