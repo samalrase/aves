@@ -1,8 +1,8 @@
 {
-  "appName": "Aves",
-  "welcomeMessage": "Welcome to Aves",
+  "appName": "گالری",
+  "welcomeMessage": "خوش آمدید",
   "welcomeOptional": "Optional",
-  "welcomeTermsToggle": "I agree to the terms and conditions",
+  "welcomeTermsToggle": "من تمامی شرایط را می پذیرم",
   "itemCount": "{count, plural, =1{{count} item} other{{count} items}}",
   "@itemCount": {
     "placeholders": {
