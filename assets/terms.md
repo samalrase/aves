@@ -1,25 +1,13 @@
-## Terms of Service
+## سیاست حفظ حریم خصوصی
 
-“Aves Gallery” is an open-source gallery and metadata explorer app allowing you to access and manage your local photos and videos.
+این برنامه هیچ‌گونه داده شخصی‌ای را جمع‌آوری نمی‌کند. ما به هیچ وجه به عکس‌ها و ویدیوهای شما دسترسی نداریم. این بدان معناست که اگر عکس‌ها یا ویدیوهای خود را بدون تهیه نسخه پشتیبان حذف کنید، ما قادر به بازیابی آن‌ها برای شما نخواهیم بود.
 
-The app is designed for legal, authorized and acceptable purposes.
+__در صورت تمایل و با رضایت شما، این برنامه به فهرست برنامه‌های نصب‌شده روی دستگاه دسترسی پیدا می‌کند__ تا نمایش آلبوم‌ها بهبود یابد.
 
-## Disclaimer
+__در صورت تمایل و با رضایت شما، این برنامه داده‌های ناشناس مربوط به خطاها و عیب‌یابی را جمع‌آوری می‌کند__ تا کیفیت برنامه ارتقا یابد. ما از سرویس «Firebase Crashlytics» استفاده می‌کنیم و این داده‌های ناشناس در سرورهای آن‌ها ذخیره می‌شوند. لطفاً توجه داشته باشید که این داده‌ها کاملاً ناشناس هستند و به هیچ وجه شامل اطلاعات شخصی نمی‌شوند.
+## ارتباط با من
 
-The app is released “as-is”, without any warranty, responsibility or liability. Use of the app is at your own risk.
+Developer: alra
 
-## Privacy Policy
+telegram: @samalra
 
-The app does not collect any personal data. We never have access to your photos and videos. This also means that we cannot get them back for you if you delete them without backing them up.
-
-__Optionally, with your consent, the app accesses the inventory of installed apps__ to improve album display.
-
-__Optionally, with your consent, the app collects anonymous error and diagnostic data__ to improve the app quality. We use Firebase Crashlytics, and the anonymous data are stored on their servers. Please note that those are anonymous data, there is absolutely nothing personal about those data.
-
-## Contact
-
-Developer: Thibault Deckers
-
-Email: [gallery.aves@gmail.com](mailto:gallery.aves@gmail.com)
-
-Website: [https://github.com/deckerst/aves](https://github.com/deckerst/aves)
